@@ -78,6 +78,7 @@ void action( int led_num )
 	 else
 	 {
 		  perror( "LED NUMBER ERROR...\n" );
+		  
 		  exit( 0 );
 	 }
 }
