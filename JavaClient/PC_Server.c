@@ -2,33 +2,38 @@
 #include <stdlib.h>
 #include <string.h>
 
-char char_led;
-int int_led;
+char char_led;    /* 接收到的客户端的LED编号 */
+int int_led;    /* 服务端的LED编号 */
 
-static int flag1 = 0;
-static int flag2 = 0;
-static int flag3 = 0;
-static int flag4 = 0;
+static int flag1 = 0;    /* LED1的标志位 */
+static int flag2 = 0;    /* LED2的标志位 */
+static int flag3 = 0;    /* LED3的标志位 */
+static int flag4 = 0;    /* LED4的标志位 */
 
+/* 对LED进行操作 */
 void action( int led_num );
 
 int main(int argc, char *argv[])
 {
 	 do
 	 {
+		  /* 接收从java客户端发来的LED灯的编号 */
 		  scanf( "%c", &char_led );
 		  getchar(  );
 
 		  int_led = char_led - '0';
 
+		  /* 根据java客户端LED灯的编号对LED进行操作 */
 		  action( int_led );
 	 } while (1);
 	 
 	 return 0;
 }
 
+/* 对LED进行操作 */
 void action( int led_num )
 {
+	 /* LED编号为1 */
 	 if (1 == led_num)
 	 {
 		  flag1++;
@@ -37,6 +42,7 @@ void action( int led_num )
 		  else
 			   printf ("LED1 ON...\n");
 	 }
+	 /* LED编号为1 */
 	 else if (2 == led_num)
 	 {
 		  flag2++;
@@ -45,6 +51,7 @@ void action( int led_num )
 		  else
 			   printf ("LED2 ON...\n");
 	 }
+	 /* LED编号为1 */
 	 else if (3 == led_num)
 	 {
 		  flag3++;
@@ -53,6 +60,7 @@ void action( int led_num )
 		  else
 			   printf ("LED3 ON...\n");
 	 }
+	 /* LED编号为1 */
 	 else if (4 == led_num)
 	 {
 		  flag4++;
@@ -61,6 +69,7 @@ void action( int led_num )
 		  else
 			   printf ("LED4 ON...\n");
 	 }
+	 /* 错误LED编号 */
 	 else
 	 {
 		  perror( "LED NUMBER ERROR...\n" );
