@@ -5,10 +5,10 @@
 char char_led;
 int int_led;
 
-int flag1 = 0;
-int flag2 = 0;
-int flag3 = 0;
-int flag4 = 0;
+static int flag1 = 0;
+static int flag2 = 0;
+static int flag3 = 0;
+static int flag4 = 0;
 
 void action( int led_num );
 
