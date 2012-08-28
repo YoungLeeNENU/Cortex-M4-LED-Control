@@ -4,7 +4,7 @@
 #include <string.h>
 
 char char_led;    /* 接收到的客户端的LED编号 */
-int int_led;    /* 服务端的LED编号 */
+int  int_led;    /* 服务端的LED编号 */
 
 static int flag1 = 0;    /* LED1的标志位 */
 static int flag2 = 0;    /* LED2的标志位 */
