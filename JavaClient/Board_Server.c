@@ -1,7 +1,7 @@
 /**
  * 板子上的服务端
  * 负责接受从PC上的Java客户端发来的信息
-*/
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
