@@ -42,7 +42,7 @@ void action( int led_num )
 		  else
 			   printf ("LED1 ON...\n");
 	 }
-	 /* LED编号为1 */
+	 /* LED编号为2 */
 	 else if (2 == led_num)
 	 {
 		  flag2++;
@@ -51,7 +51,7 @@ void action( int led_num )
 		  else
 			   printf ("LED2 ON...\n");
 	 }
-	 /* LED编号为1 */
+	 /* LED编号为3 */
 	 else if (3 == led_num)
 	 {
 		  flag3++;
@@ -60,7 +60,7 @@ void action( int led_num )
 		  else
 			   printf ("LED3 ON...\n");
 	 }
-	 /* LED编号为1 */
+	 /* LED编号为4 */
 	 else if (4 == led_num)
 	 {
 		  flag4++;
