@@ -38,6 +38,7 @@ void action( int led_num )
 	 if (1 == led_num)
 	 {
 		  flag1++;
+		  
 		  if (0 == flag1 % 2)
 			   printf ("LED1 OFF...\n");
 		  else
@@ -47,6 +48,7 @@ void action( int led_num )
 	 else if (2 == led_num)
 	 {
 		  flag2++;
+		  
 		  if (0 == flag2 % 2)
 			   printf ("LED2 OFF...\n");
 		  else
@@ -56,6 +58,7 @@ void action( int led_num )
 	 else if (3 == led_num)
 	 {
 		  flag3++;
+		  
 		  if (0 == flag3 % 2)
 			   printf ("LED3 OFF...\n");
 		  else
@@ -65,6 +68,7 @@ void action( int led_num )
 	 else if (4 == led_num)
 	 {
 		  flag4++;
+		  
 		  if (0 == flag4 % 2)
 			   printf ("LED4 OFF...\n");
 		  else
