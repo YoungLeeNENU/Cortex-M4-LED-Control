@@ -5,6 +5,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <netdb.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <errno.h>
 
 #define LED_ON   1
 #define LED_OFF  0
@@ -28,7 +35,17 @@ void action( int led_num );
 
 int main(int argc, char *argv[])
 {
-	 /* int MyStreamSocket = socket( int domain, int type, int protocol ); */
+	 struct sockaddr_in servaddr;
+
+	 /* 建立一个Socket */
+     int clisock = socket( AF_INET,    /* 使用IPV4 */
+								  SOCK_STREAM,    /* 使用TCP协议进行Stream Communication */
+								  0 );    /* 使用常用的协议进行通信 */
+
+	 memset(&servaddr, 0, sizeof(servaddr));
+	 servaddr.sin_family = AF_INET;
+	 servaddr.sin_port = htons(48000);
+	 servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");    /* 本地 */
 	 
 	 do
 	 {
@@ -41,6 +58,8 @@ int main(int argc, char *argv[])
 		  /* 根据java客户端LED灯的编号对LED进行操作 */
 		  action( int_led );
 	 } while (LED_ON == led_flag);
+
+	 close( clisock );    /* 关闭Socket */
 	 
 	 return 0;
 }
@@ -54,6 +73,7 @@ void action( int led_num )
 	 /* LED编号为1 */
 	 else if (LED1 == led_num)
 	 {
+		  /* 启用控制函数 */
 		  if (LED_OFF == led_flag1 % 2)
 			   printf ("LED1 OFF...\n");
 		  else
