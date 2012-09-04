@@ -6,9 +6,9 @@ public class PC_Client{
 	static Socket server;
  
 	public static void main(String[] args)throws Exception{
-		server = new Socket(InetAddress.getLocalHost(), 3333);
+		server = new Socket(InetAddress.getLocalHost(), 5000);
 		// 板子的IP为192.168.0.10
-		// server = new Socket("192.168.0.10", 3333);
+		// server = new Socket("192.168.0.10", 5000);
 		// 测试用的本地IP
 		BufferedReader in = new BufferedReader(new InputStreamReader(server.getInputStream()));
 		PrintWriter out = new PrintWriter(server.getOutputStream());

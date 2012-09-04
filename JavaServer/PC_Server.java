@@ -3,7 +3,7 @@ import java.net.*;
 
 public class PC_Server{
 	public static void main(String[] args) throws Exception{
-		ServerSocket server = new ServerSocket(3333);
+		ServerSocket server = new ServerSocket(5000);
 		Socket client = server.accept();
         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         PrintWriter out = new PrintWriter(client.getOutputStream());
