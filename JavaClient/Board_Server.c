@@ -2,120 +2,136 @@
  * 板子上的服务端
  * 负责接受从PC上的Java客户端发来的信息
  */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <netdb.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+#include <string.h>
 
-#define LED_ON   1
-#define LED_OFF  0
-#define LED1     1
-#define LED2     2
-#define LED3     3
-#define LED4     4
-#define STOP_LED 0
+#define LED_ON    1
+#define LED_OFF   0
+#define LED1     "1"
+#define LED2     "2"
+#define LED3     "3"
+#define LED4     "4"
+#define STOP_LED "q"
 
-char char_led;    /* 接收到的客户端的LED编号 */
-int  int_led;    /* 服务端的LED编号 */
-
-static int led_flag  = LED_ON;    /* 停止标志位 */
-static int led_flag1 = LED_ON;    /* LED1的标志位 */
-static int led_flag2 = LED_ON;    /* LED2的标志位 */
-static int led_flag3 = LED_ON;    /* LED3的标志位 */
-static int led_flag4 = LED_ON;    /* LED4的标志位 */
-
-/* 对LED进行操作 */
-void action( int led_num );
+long led_flag1 = LED_ON;    /* LED1的标志位 */
+long led_flag2 = LED_ON;    /* LED2的标志位 */
+long led_flag3 = LED_ON;    /* LED3的标志位 */
+long led_flag4 = LED_ON;    /* LED4的标志位 */
 
 int main(int argc, char *argv[])
 {
-	 struct sockaddr_in servaddr;
+    int sock, connected;
+    int recieved;
+    int sin_size;
+    int true = 1;
+    char recv_buf[1024];
+    
+    struct sockaddr_in server;
+    
+    if (-1 == (sock = socket(AF_INET, SOCK_STREAM, 0)))
+    {
+        perror("socket error.");
+        exit(0);
+    }
 
-	 /* 建立一个Socket */
-     int clisock = socket( AF_INET,    /* 使用IPV4 */
-								  SOCK_STREAM,    /* 使用TCP协议进行Stream Communication */
-								  0 );    /* 使用常用的协议进行通信 */
+    if (-1 == setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &true, sizeof(int)))
+    {
+        perror("setsockopt error.");
+        exit(1);
+    }
+    
+    server.sin_family = AF_INET;
+    server.sin_port = htons(1991);
+    server.sin_addr.s_addr = INADDR_ANY;
+    bzero(&(server.sin_zero),8);
+    
+    if (-1 == bind(sock, (struct sockaddr *)&server, sizeof(struct sockaddr)))
+    {
+        perror("bind error.");
+        exit(1);
+    }
 
-	 memset(&servaddr, 0, sizeof(servaddr));
-	 servaddr.sin_family = AF_INET;
-	 servaddr.sin_port = htons(48000);
-	 servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");    /* 本地 */
-	 
-	 do
-	 {
-		  /* 接收从java客户端发来的LED灯的编号 */
-		  scanf( "%c", &char_led );
-		  getchar(  );
+    if (-1 == listen(sock, 10))
+    {
+        perror("listen error.");
+        exit(1);
+    }
 
-		  int_led = char_led - '0';
+    printf ("Waiting...\n");
+    fflush(stdout);
 
-		  /* 根据java客户端LED灯的编号对LED进行操作 */
-		  action( int_led );
-	 } while (LED_ON == led_flag);
+    do
+    {
+        sin_size = sizeof(struct sockaddr_in);
 
-	 close( clisock );    /* 关闭Socket */
-	 
-	 return 0;
-}
+        connected = accept(sock, (struct sockaddr *)&server, &sin_size);
 
-/* 对LED进行操作 */
-void action( int led_num )
-{
-	 /* 停止位为0 */
-	 if (STOP_LED == led_num)
-		  led_flag = LED_OFF;
-	 /* LED编号为1 */
-	 else if (LED1 == led_num)
-	 {
-		  /* 启用控制函数 */
-		  if (LED_OFF == led_flag1 % 2)
-			   printf ("LED1 OFF...\n");
-		  else
-			   printf ("LED1 ON...\n");
+        printf("\nConnected.\nFrom (%s , %d)\n\n", inet_ntoa(server.sin_addr), ntohs(server.sin_port));
 
-		  led_flag1++;
-	 }
-	 /* LED编号为2 */
-	 else if (LED2 == led_num)
-	 {
-		  if (LED_OFF == led_flag2 % 2)
-			   printf ("LED2 OFF...\n");
-		  else
-			   printf ("LED2 ON...\n");
+        do
+        {
+            recieved = recv(connected, recv_buf, 1024, 0);
+            recv_buf[recieved] = '\0';
 
-		  led_flag2++;
-	 }
-	 /* LED编号为3 */
-	 else if (LED3 == led_num)
-	 {
-		  if (LED_OFF == led_flag3 % 2)
-			   printf ("LED3 OFF...\n");
-		  else
-			   printf ("LED3 ON...\n");
+            if (0 == strcmp(recv_buf, STOP_LED))
+            {
+                close(connected);
+                exit(1);
+            }
+            else if (0 == strcmp(recv_buf, LED1))
+            {
+                if (LED_OFF == led_flag1 % 2)
+                    printf ("call led1 function, led1 off.\n");
+                else
+                    printf ("call led1 function, led1 on.\n");
+                
+                led_flag1++;
+            }
+            else if (0 == strcmp(recv_buf, LED2))
+            {
+                if (LED_OFF == led_flag2 % 2)
+                    printf ("call led2 function, led2 off.\n");
+                else
+                    printf ("call led2 function, led2 on.\n");
+                
+                led_flag2++;
+            }
+            else if (0 == strcmp(recv_buf, LED3))
+            {
+                if (LED_OFF == led_flag3 % 2)
+                    printf ("call led3 function, led3 off.\n");
+                else
+                    printf ("call led3 function, led3 on.\n");
+                
+                led_flag3++;
+            }
+            else if (0 == strcmp(recv_buf, LED4))
+            {
+                if (LED_OFF == led_flag4 % 2)
+                    printf ("call led4 function, led4 off.\n");
+                else
+                    printf ("call led4 function, led4 on.\n");
+                
+                led_flag4++;
+            }
+            else
+            {
+                printf ("order error.\n");
+            }
+            
+            fflush(stdout);
+        } while (1);
 
-		  led_flag3++;
-	 }
-	 /* LED编号为4 */
-	 else if (LED4 == led_num)
-	 {
-		  if (LED_OFF == led_flag4 % 2)
-			   printf ("LED4 OFF...\n");
-		  else
-			   printf ("LED4 ON...\n");
+    } while (1);
 
-		  led_flag4++;
-	 }
-	 /* 错误LED编号 */
-	 else
-	 {
-		  perror( "LED NUMBER ERROR...\n" );
-		  
-		  exit( 0 );
-	 }
+    close(sock);
+    
+    return 0;
 }

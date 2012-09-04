@@ -11,23 +11,29 @@
 
 int main(int argc, char *argv[])
 {
-    int sock, bytes_recieved;  
-    char send_data[1024], recv_data[1024];
+    int sock, bytes_recieved;    /* socket的文件描述福和收到文件的byte数 */
+    char send_data[1024], recv_data[1024];    /* 收发数据缓冲区 */
     struct hostent *host;
-    struct sockaddr_in server_addr;  
+    struct sockaddr_in server_addr;    /* sockaddr_in结构 */
 
-    host = gethostbyname("127.0.0.1");
+    host = gethostbyname("127.0.0.1");    /* 本地IP */
 
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+        /* 初始化socket */
+    if (-1 == (sock = socket(AF_INET, SOCK_STREAM, 0)))
+    {
         perror("Socket");
         exit(1);
     }
 
-    server_addr.sin_family = AF_INET;     
-    server_addr.sin_port = htons(5000);
+        /* IP通信 */
+    server_addr.sin_family = AF_INET;
+        /* 服务器端口号1991 */
+    server_addr.sin_port = htons(1991);
+        /* 服务器IP地址 */
     server_addr.sin_addr = *((struct in_addr *)host->h_addr);
+        /* 把sin_zero的8位置0 */
     bzero(&(server_addr.sin_zero),8); 
-
+    
     if (connect(sock, (struct sockaddr *)&server_addr,
                 sizeof(struct sockaddr)) == -1) 
     {
@@ -37,7 +43,8 @@ int main(int argc, char *argv[])
 
     while(1)
     {
-        bytes_recieved=recv(sock,recv_data,1024,0);
+            /* 收数据 */
+        bytes_recieved = recv(sock,recv_data,1024,0);
         recv_data[bytes_recieved] = '\0';
  
         if (strcmp(recv_data , "q") == 0 || strcmp(recv_data , "Q") == 0)
@@ -50,9 +57,10 @@ int main(int argc, char *argv[])
            
         printf("\nSEND (q or Q to quit) : ");
         gets(send_data);
-           
+
+            /* 发数据 */
         if (strcmp(send_data , "q") != 0 && strcmp(send_data , "Q") != 0)
-            send(sock,send_data,strlen(send_data), 0); 
+            send(sock,send_data,strlen(send_data), 0);
         else
         {
             send(sock,send_data,strlen(send_data), 0);   
