@@ -9,5 +9,5 @@ CLOSED: [2013-05-19 日 20:05]
 - 无操作系统的情况下用的是 Standalone 模式，此模式下不使用 Socket API ，而是使用回调函数的方式直接操作 TCP 。
 - 使用回调函数方式操作 TCP 可以参考例程中的 tcp echo server 和 tcp echo client
 ** 改用 python 作为 PC 端的服务器和客户端
-- 参考
+- 参考文件夹 udp_python_server ， udp_python_client ， tcp_python_server ， tcp_python_client。
 ** 按协议只 push PC 端的代码
