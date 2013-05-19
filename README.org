@@ -1,3 +1,13 @@
-* TODO 由PC操作板子上的LED。
-** TODO 做个java socket server on PC，做个 socket client embedded 无操作系统的。
-** TODO 做个 socket server embedded，做个 java socket client on PC。
+* DONE 由PC操作板子上的LED。
+CLOSED: [2013-05-19 日 20:05]
+** DONE 做个java socket server on PC，做个 socket client embedded 无操作系统的。
+CLOSED: [2013-05-19 日 20:05]
+** DONE 做个 socket server embedded，做个 java socket client on PC。
+CLOSED: [2013-05-19 日 20:05]
+* TIPS 笔记
+** 用 Lwip 库直接操作 TCP
+- 无操作系统的情况下用的是 Standalone 模式，此模式下不使用 Socket API ，而是使用回调函数的方式直接操作 TCP 。
+- 使用回调函数方式操作 TCP 可以参考例程中的 tcp echo server 和 tcp echo client
+** 改用 python 作为 PC 端的服务器和客户端
+- 参考
+** 按协议只 push PC 端的代码
